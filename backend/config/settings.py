@@ -200,8 +200,6 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
-    "https://pay-gpt.vercel.app",
-    "https://paygpt.onrender.com",
     "https://kudispan-ai.vercel.app",
     "https://kudispan-ai.onrender.com",
 ]
