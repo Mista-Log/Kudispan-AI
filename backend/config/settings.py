@@ -203,6 +203,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://pay-gpt.vercel.app",
     "https://paygpt.onrender.com",
     "https://kudispan-ai.vercel.app",
+    "https://kudispan-ai.onrender.com",
 ]
 
 ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
