@@ -197,19 +197,12 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-    "https://kudispan-ai.vercel.app",
-    "https://kudispan-ai.onrender.com",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://kudispan-ai.vercel.app",
-    "https://kudispan-ai.onrender.com",
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
 ALATPAY_BUSINESS_ID = os.getenv("ALATPAY_BUSINESS_ID")
