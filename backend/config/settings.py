@@ -206,6 +206,13 @@ CORS_ALLOWED_ORIGINS = [
     "https://kudispan-ai.onrender.com",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://kudispan-ai.vercel.app",
+    "https://kudispan-ai.onrender.com",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
 ALATPAY_BUSINESS_ID = os.getenv("ALATPAY_BUSINESS_ID")
 ALATPAY_PUBLIC_KEY = os.getenv("ALATPAY_PUBLIC_KEY")
