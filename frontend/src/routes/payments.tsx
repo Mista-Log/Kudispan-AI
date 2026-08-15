@@ -27,9 +27,9 @@ function PaymentsPage() {
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <Account name="Operating" number="•••• 4521" balance="$182,430.18" />
-          <Account name="Savings" number="•••• 7790" balance="$54,000.00" />
-          <Account name="Tax reserve" number="•••• 0021" balance="$26,140.55" />
+          <Account name="Operating" number="•••• 4521" balance="#182,430.18" />
+          <Account name="Savings" number="•••• 7790" balance="#54,000.00" />
+          <Account name="Tax reserve" number="•••• 0021" balance="#26,140.55" />
         </div>
 
         <div className="mt-10">
@@ -39,7 +39,7 @@ function PaymentsPage() {
               {tx.map((t) => (
                 <li key={t.id} className="flex items-center justify-between px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <span className={`grid h-9 w-9 place-items-center rounded-full ${t.kind === "in" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                    <span className={`grid h-9 w-9 place-items-center rounded-full #{t.kind === "in" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
                       {t.kind === "in" ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                     </span>
                     <div>
@@ -47,8 +47,8 @@ function PaymentsPage() {
                       <div className="text-xs text-muted-foreground">{t.date}</div>
                     </div>
                   </div>
-                  <div className={`tabular-nums text-sm font-medium ${t.amount > 0 ? "text-primary" : "text-foreground"}`}>
-                    {t.amount > 0 ? "+" : ""}${Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  <div className={`tabular-nums text-sm font-medium #{t.amount > 0 ? "text-primary" : "text-foreground"}`}>
+                    {t.amount > 0 ? "+" : ""}#{Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </div>
                 </li>
               ))}
