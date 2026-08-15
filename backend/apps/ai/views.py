@@ -16,9 +16,9 @@ from .service import AIService
 
 @extend_schema(
     tags=["AI"],
-    summary="Chat with PayGPT",
+    summary="Chat with Kudispan AI",
     description="""
-Send a message to PayGPT and receive an AI-generated response.
+Send a message to Kudispan AI and receive an AI-generated response.
 
 The conversation history is automatically included to provide context.
 """,
@@ -32,14 +32,14 @@ The conversation history is automatically included to provide context.
         OpenApiExample(
             "Chat Request",
             value={
-                "message": "Hello PayGPT"
+                "message": "Hello Kudispan AI"
             },
             request_only=True,
         ),
         OpenApiExample(
             "Chat Response",
             value={
-                "response": "Hello! I'm PayGPT. How can I help you today?"
+                "response": "Hello! I'm Kudispan AI. How can I help you today?"
             },
             response_only=True,
         ),
@@ -56,7 +56,6 @@ class ChatAPIView(APIView):
 
         message = serializer.validated_data["message"]
 
-        # Save user's message
         ChatMessage.objects.create(
             user=request.user,
             role=ChatMessage.Role.USER,
@@ -70,7 +69,6 @@ class ChatAPIView(APIView):
             message,
         )
 
-        # Save assistant's response
         assistant_message = ChatMessage.objects.create(
             user=request.user,
             role=ChatMessage.Role.ASSISTANT,

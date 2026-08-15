@@ -1,5 +1,5 @@
-from google import genai
 from django.conf import settings
+from openai import OpenAI
 
 from .models import ChatMessage
 from .prompts import SYSTEM_PROMPT
@@ -8,34 +8,51 @@ from .prompts import SYSTEM_PROMPT
 class AIService:
 
     def __init__(self):
-        self.client = genai.Client(
-            api_key=settings.GEMINI_API_KEY
+        self.client = OpenAI(
+            api_key=settings.OPENROUTER_API_KEY,
+            base_url="https://openrouter.ai/api/v1",
         )
 
-    def build_prompt(self, user, message):
-
+    def build_messages(self, user):
         history = (
             ChatMessage.objects
             .filter(user=user)
             .order_by("created_at")
         )
 
-        prompt = SYSTEM_PROMPT + "\n\n"
+        messages = [
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            }
+        ]
 
         for chat in history:
-            prompt += f"{chat.role}: {chat.content}\n"
+            messages.append(
+                {
+                    "role": chat.role,
+                    "content": chat.content,
+                }
+            )
 
-        prompt += f"user: {message}"
-
-        return prompt
+        return messages
 
     def chat(self, user, message):
 
-        prompt = self.build_prompt(user, message)
+        messages = self.build_messages(user)
 
-        interaction = self.client.interactions.create(
-            model="gemini-3.5-flash",
-            input=prompt,
+        messages.append(
+            {
+                "role": "user",
+                "content": message,
+            }
         )
 
-        return interaction.output_text
+        response = self.client.chat.completions.create(
+            model=settings.OPENROUTER_MODEL,
+            messages=messages,
+            temperature=0.3,
+            max_tokens=1000,
+        )
+
+        return response.choices[0].message.content

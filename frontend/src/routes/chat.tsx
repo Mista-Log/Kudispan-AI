@@ -1,6 +1,6 @@
 import { PageShell } from "@/components/page-shell";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { sendChatMessage } from "@/api/chat";
 import {
   Send,
   Sparkles,
@@ -14,9 +14,8 @@ import {
   FileText,
   ImageIcon,
   AudioLines,
-  Bot,
-  User,
 } from "lucide-react";
+
 
 type Attachment = {
   id: string;
@@ -28,7 +27,7 @@ type Attachment = {
 
 type Msg = {
   id: number;
-  who: "you" | "paygpt";
+  who: "you" | "Kudispan AI";
   text: string;
   attachments?: Attachment[];
 };
@@ -36,8 +35,8 @@ type Msg = {
 const seed: Msg[] = [
   {
     id: 1,
-    who: "paygpt",
-    text: "Hi 👋 I'm Kudispan AI. Ask me to send a payment, draft an invoice, or analyze your business cashflow. You can also attach receipts or record a voice note.",
+    who: "Kudispan AI",
+    text: "Hi 👋 I'm Kudispan AI. Ask me to send a payment, draft an invoice, or analyse your spending. You can also attach a file or record a voice note.",
   },
 ];
 
@@ -45,7 +44,7 @@ const suggestions = [
   { icon: Receipt, text: "Draft an invoice for $2,500 to Mercer & Bell, due in 14 days." },
   { icon: ArrowUpRight, text: "Pay rent of $3,200 to Atlas Properties on the 1st of every month." },
   { icon: LineChart, text: "What were our top 5 expenses last month?" },
-  { icon: Sparkles, text: "Summarize this week's incoming payments and runway." },
+  { icon: Sparkles, text: "Summarise this week's incoming payments." },
 ];
 
 function kindFromMime(type: string): Attachment["kind"] {
@@ -61,10 +60,7 @@ function formatSize(bytes: number) {
 }
 
 function ChatPage() {
-  useEffect(() => {
-    document.title = "AI Financial Assistant — Kudispan AI";
-  }, []);
-
+  useEffect(() => { document.title = 'Assistant — Kudispan AI'; }, []);
   const [messages, setMessages] = useState<Msg[]>(seed);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState<Attachment[]>([]);
@@ -75,6 +71,8 @@ function ChatPage() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -151,106 +149,119 @@ function ChatPage() {
     }
   };
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const t = text.trim();
-    if (!t && pending.length === 0) return;
+
+    if (!t || loading) return;
+
     const id = Date.now();
     const atts = pending;
-    setMessages((m) => [...m, { id, who: "you", text: t, attachments: atts }]);
-    setPending([]);
+
+    // Show user's message immediately
+    setMessages((messages) => [
+      ...messages,
+      {
+        id,
+        who: "you",
+        text: t,
+        attachments: atts,
+      },
+    ]);
+
+    // Clear input
     setInput("");
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
+    setPending([]);
+
+    // Show loading state
+    setLoading(true);
+
+    try {
+      const response = await sendChatMessage(t);
+
+      const assistantMessage = response.message;
+
+      // Add AI response
+      setMessages((messages) => [
+        ...messages,
         {
-          id: id + 1,
-          who: "paygpt",
-          text:
-            atts.length > 0
-              ? `Received ${atts.length} attachment${atts.length > 1 ? "s" : ""}. Analyzing ledger details...`
-              : "Action parsed. Connected to ALATPay banking engine.",
+          id: assistantMessage.id,
+          who: "Kudispan AI",
+          text: assistantMessage.content,
         },
       ]);
-    }, 600);
+    } catch (error) {
+      console.error("Chat request failed:", error);
+
+      setMessages((messages) => [
+        ...messages,
+        {
+          id: Date.now() + 1,
+          who: "Kudispan AI",
+          text:
+            error instanceof Error
+              ? error.message
+              : "Sorry, something went wrong. Please try again.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <PageShell>
-      <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-4xl flex-col px-4 py-6">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-3xl sm:text-4xl">Conversational Finance</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Direct conversational interface to your business accounts, invoicing & payments.
-            </p>
-          </div>
-          <span className="hidden sm:flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            <span>Active Banking Session</span>
-          </span>
+      <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col px-4 py-6">
+        <div className="mb-4">
+          <h1 className="text-3xl">Assistant</h1>
+          <p className="text-sm text-muted-foreground">Your AI finance operator.</p>
         </div>
 
-        {/* Message Container with Framer Motion */}
-        <div className="flex-1 space-y-4 overflow-y-auto rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
+        <div className="flex-1 space-y-3 overflow-y-auto rounded-xl border border-border bg-card p-4">
           {messages.map((m) => (
-            <motion.div
-              key={m.id}
-              initial={{ opacity: 0, y: 10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.3 }}
-              className={`flex ${m.who === "you" ? "justify-end" : "justify-start"}`}
-            >
-              <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[75%]">
-                {m.who === "paygpt" && (
-                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground font-display font-bold text-xs shadow-sm">
-                    K
-                  </div>
-                )}
-                <div
-                  className={`space-y-2 rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
-                    m.who === "you"
-                      ? "rounded-tr-sm bg-primary text-primary-foreground"
-                      : "rounded-tl-sm bg-muted/70 text-foreground border border-border/80"
-                  }`}
-                >
-                  {m.text && <div>{m.text}</div>}
-                  {m.attachments && m.attachments.length > 0 && (
-                    <div className="space-y-2">
-                      {m.attachments.map((a) => (
-                        <AttachmentPreview key={a.id} att={a} dark={m.who === "you"} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {m.who === "you" && (
-                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-muted text-foreground">
-                    <User className="h-4 w-4" />
+            <div key={m.id} className={`flex ${m.who === "you" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`max-w-[80%] space-y-2 rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                  m.who === "you" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                }`}
+              >
+                {m.text && <div>{m.text}</div>}
+                {m.attachments && m.attachments.length > 0 && (
+                  <div className="space-y-2">
+                    {m.attachments.map((a) => (
+                      <AttachmentPreview key={a.id} att={a} dark={m.who === "you"} />
+                    ))}
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="rounded-2xl bg-muted px-4 py-2.5 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 animate-pulse" />
+                  <span>Thinking...</span>
+                </div>
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
 
         {messages.length <= 1 && pending.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"
-          >
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {suggestions.map((s) => (
               <button
                 key={s.text}
                 onClick={() => send(s.text)}
-                className="flex items-start gap-3 rounded-xl border border-border bg-card p-3 text-left text-xs text-muted-foreground transition-all hover:border-primary/40 hover:bg-muted hover:text-foreground hover:shadow-sm"
+                className="flex items-start gap-3 rounded-lg border border-border bg-card p-3 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <s.icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span className="leading-snug">{s.text}</span>
+                <span>{s.text}</span>
               </button>
             ))}
-          </motion.div>
+          </div>
         )}
 
         {pending.length > 0 && (
@@ -258,30 +269,29 @@ function ChatPage() {
             {pending.map((a) => (
               <div
                 key={a.id}
-                className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-2.5 py-1.5 text-xs"
+                className="flex items-center gap-2 rounded-md border border-border bg-muted/50 px-2 py-1.5 text-xs"
               >
                 <KindIcon kind={a.kind} />
-                <span className="max-w-[140px] truncate font-medium">{a.name}</span>
-                <span className="text-muted-foreground text-[10px]">{formatSize(a.size)}</span>
+                <span className="max-w-[140px] truncate">{a.name}</span>
+                <span className="text-muted-foreground">{formatSize(a.size)}</span>
                 <button
                   onClick={() => removePending(a.id)}
                   className="rounded p-0.5 text-muted-foreground hover:bg-background hover:text-foreground"
                   aria-label="Remove attachment"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* Input Bar */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             send(input);
           }}
-          className="mt-3 flex items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm"
+          className="mt-3 flex items-center gap-2 rounded-xl border border-border bg-card p-2"
         >
           <input
             ref={fileRef}
@@ -297,7 +307,7 @@ function ChatPage() {
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             aria-label="Attach file"
             title="Attach image, audio or document"
           >
@@ -306,7 +316,7 @@ function ChatPage() {
           <button
             type="button"
             onClick={recording ? stopRecording : startRecording}
-            className={`inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-colors ${
+            className={`inline-flex h-9 items-center justify-center gap-1.5 rounded-md px-2 text-sm transition-colors ${
               recording
                 ? "bg-destructive/10 text-destructive hover:bg-destructive/15"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -316,7 +326,7 @@ function ChatPage() {
           >
             {recording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
             {recording && (
-              <span className="tabular-nums font-mono text-xs">
+              <span className="tabular-nums text-xs">
                 {Math.floor(recordSeconds / 60)}:{String(recordSeconds % 60).padStart(2, "0")}
               </span>
             )}
@@ -324,17 +334,18 @@ function ChatPage() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={recording ? "Listening to voice note…" : "Instruct Kudispan to bill, transfer, or analyze…"}
+            placeholder={recording ? "Recording…" : "Ask Kudispan AI to do something…"}
             disabled={recording}
-            className="flex-1 bg-transparent px-2 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-60"
+            className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60"
           />
           <button
             type="submit"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/95 transition-all disabled:opacity-50"
-            disabled={recording || (!input.trim() && pending.length === 0)}
+            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+            disabled={recording || loading || !input.trim()}
           >
             <Send className="h-4 w-4" />
-            <span className="hidden sm:inline">Send</span>
+
+            {loading ? "Thinking..." : "Send"}
           </button>
         </form>
       </div>
@@ -354,7 +365,7 @@ function AttachmentPreview({ att, dark }: { att: Attachment; dark: boolean }) {
       <img
         src={att.url}
         alt={att.name}
-        className="max-h-48 rounded-lg border border-border/40 object-cover"
+        className="max-h-48 rounded-md border border-border/40 object-cover"
       />
     );
   }
@@ -363,13 +374,13 @@ function AttachmentPreview({ att, dark }: { att: Attachment; dark: boolean }) {
   }
   return (
     <div
-      className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs ${
-        dark ? "bg-primary-foreground/15 text-primary-foreground" : "bg-background/80 text-foreground"
+      className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs ${
+        dark ? "bg-primary-foreground/10" : "bg-background/60"
       }`}
     >
       <FileText className="h-3.5 w-3.5" />
-      <span className="truncate font-medium">{att.name}</span>
-      <span className="opacity-70 font-mono text-[10px]">{formatSize(att.size)}</span>
+      <span className="truncate">{att.name}</span>
+      <span className="opacity-70">{formatSize(att.size)}</span>
     </div>
   );
 }
