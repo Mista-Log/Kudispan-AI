@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   MessageSquare,
   Receipt,
@@ -7,8 +7,7 @@ import {
   BookOpen,
   Tag,
   Home,
-  LogIn,
-  UserPlus,
+  LogOut,
 } from "lucide-react";
 
 import {
@@ -24,6 +23,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { isAuthenticated, logout } from "@/utils/auth";
+import logo from "@/assets/logo.png";
 
 const mainItems = [
   { title: "Home", url: "/", icon: Home },
@@ -38,24 +39,29 @@ const resourceItems = [
   { title: "Docs", url: "/docs", icon: BookOpen },
 ] as const;
 
-const accountItems = [
-  { title: "Sign in", url: "/login", icon: LogIn },
-  { title: "Get started", url: "/signup", icon: UserPlus },
-] as const;
-
 export function AppSidebar() {
+  const navigate = useNavigate();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { pathname } = useLocation();
   const isActive = (path: string) =>
     path === "/" ? pathname === "/" : pathname.startsWith(path);
 
+  if (!isAuthenticated()) {
+    return null;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <Link to="/" className="flex items-center gap-2 px-2 py-1.5">
-          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground font-display text-lg">
-            P
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
+            <img src={logo} alt="Logo" className="h-5 w-5 object-contain brightness-0 invert" />
           </span>
           {!collapsed && <span className="font-display text-xl tracking-tight">Kudispan AI</span>}
         </Link>
@@ -101,18 +107,19 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-          {accountItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                <Link to={item.url} className="flex items-center gap-2">
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleLogout}
+              tooltip="Sign out"
+              className="text-muted-foreground hover:text-destructive"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
 }
+
