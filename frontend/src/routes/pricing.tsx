@@ -7,14 +7,14 @@ import { Check } from "lucide-react";
 const plans = [
   {
     name: "Personal",
-    price: "$0",
+    price: "#0",
     sub: "Free forever",
     features: ["Up to 5 invoices/mo", "1 connected account", "Basic insights", "Email support"],
     cta: "Get started",
   },
   {
     name: "Business",
-    price: "$29",
+    price: "#29",
     sub: "per user / month",
     featured: true,
     features: ["Unlimited invoices", "Multiple accounts", "Scheduled payments", "Priority support", "Insights & exports"],
@@ -43,7 +43,7 @@ function PricingPage() {
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`rounded-2xl border p-7 ${p.featured ? "border-primary bg-card ring-1 ring-primary" : "border-border bg-card"}`}
+              className={`rounded-2xl border p-7 #{p.featured ? "border-primary bg-card ring-1 ring-primary" : "border-border bg-card"}`}
             >
               <div className="flex items-baseline justify-between">
                 <h3 className="text-2xl">{p.name}</h3>
@@ -62,7 +62,7 @@ function PricingPage() {
               </ul>
               <Link
                 to="/signup"
-                className={`mt-8 inline-flex w-full justify-center rounded-md px-4 py-2.5 text-sm font-medium ${
+                className={`mt-8 inline-flex w-full justify-center rounded-md px-4 py-2.5 text-sm font-medium #{
                   p.featured
                     ? "bg-primary text-primary-foreground hover:opacity-90"
                     : "border border-border bg-background text-foreground hover:bg-muted"

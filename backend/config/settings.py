@@ -10,7 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env
+load_dotenv(BASE_DIR / ".env")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +33,12 @@ SECRET_KEY = 'django-insecure-41hdp0tv$p_l7nd-zyqviiu6!u@4=r%xtslufx2yu_ms-o+5q_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".onrender.com",
+    ".vercel.app",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -40,14 +53,20 @@ INSTALLED_APPS = [
     
     "rest_framework",
     "drf_spectacular",
+    "corsheaders",
 
 
 
     "apps.accounts",
+    "apps.ai",
+    "apps.invoice",
+    "apps.payments",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,7 +140,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -160,3 +184,34 @@ SPECTACULAR_SETTINGS = {
         }
     },
 }
+
+SIMPLE_JWT = {
+    # Increase access token lifetime (e.g., from default 5 mins to 1 hour)
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
+    
+    # Increase refresh token lifetime (e.g., from default 1 day to 7 days)
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    
+    # Optional: Automatically issue a new refresh token whenever a token is refreshed
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "https://pay-gpt.vercel.app",
+    "https://paygpt.onrender.com",
+]
+
+ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
+ALATPAY_BUSINESS_ID = os.getenv("ALATPAY_BUSINESS_ID")
+ALATPAY_PUBLIC_KEY = os.getenv("ALATPAY_PUBLIC_KEY")
+ALATPAY_SECRET_KEY = os.getenv("ALATPAY_SECRET_KEY")
+ALATPAY_WEBHOOK_SECRET = os.getenv("ALATPAY_WEBHOOK_SECRET")
+ALATPAY_REDIRECT_URL = os.getenv("ALATPAY_REDIRECT_URL")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL",
+    "openai/gpt-5",
+)

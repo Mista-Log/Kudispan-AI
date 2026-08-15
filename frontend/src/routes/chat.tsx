@@ -1,5 +1,6 @@
 import { PageShell } from "@/components/page-shell";
 import { useState, useRef, useEffect } from "react";
+import { sendChatMessage } from "@/api/chat";
 import {
   Send,
   Sparkles,
@@ -26,7 +27,7 @@ type Attachment = {
 
 type Msg = {
   id: number;
-  who: "you" | "paygpt";
+  who: "you" | "Kudispan AI";
   text: string;
   attachments?: Attachment[];
 };
@@ -34,8 +35,8 @@ type Msg = {
 const seed: Msg[] = [
   {
     id: 1,
-    who: "paygpt",
-    text: "Hi 👋 I'm PayGPT. Ask me to send a payment, draft an invoice, or analyse your spending. You can also attach a file or record a voice note.",
+    who: "Kudispan AI",
+    text: "Hi 👋 I'm Kudispan AI. Ask me to send a payment, draft an invoice, or analyse your spending. You can also attach a file or record a voice note.",
   },
 ];
 
@@ -59,7 +60,7 @@ function formatSize(bytes: number) {
 }
 
 function ChatPage() {
-  useEffect(() => { document.title = 'Assistant — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Assistant — Kudispan AI'; }, []);
   const [messages, setMessages] = useState<Msg[]>(seed);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState<Attachment[]>([]);
@@ -70,6 +71,8 @@ function ChatPage() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -146,27 +149,63 @@ function ChatPage() {
     }
   };
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const t = text.trim();
-    if (!t && pending.length === 0) return;
+
+    if (!t || loading) return;
+
     const id = Date.now();
     const atts = pending;
-    setMessages((m) => [...m, { id, who: "you", text: t, attachments: atts }]);
-    setPending([]);
+
+    // Show user's message immediately
+    setMessages((messages) => [
+      ...messages,
+      {
+        id,
+        who: "you",
+        text: t,
+        attachments: atts,
+      },
+    ]);
+
+    // Clear input
     setInput("");
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
+    setPending([]);
+
+    // Show loading state
+    setLoading(true);
+
+    try {
+      const response = await sendChatMessage(t);
+
+      const assistantMessage = response.message;
+
+      // Add AI response
+      setMessages((messages) => [
+        ...messages,
         {
-          id: id + 1,
-          who: "paygpt",
-          text:
-            atts.length > 0
-              ? `Received ${atts.length} attachment${atts.length > 1 ? "s" : ""}. (Connect your backend to process them.)`
-              : "Got it. (Connect your backend to enable real actions — this is a UI preview.)",
+          id: assistantMessage.id,
+          who: "Kudispan AI",
+          text: assistantMessage.content,
         },
       ]);
-    }, 600);
+    } catch (error) {
+      console.error("Chat request failed:", error);
+
+      setMessages((messages) => [
+        ...messages,
+        {
+          id: Date.now() + 1,
+          who: "Kudispan AI",
+          text:
+            error instanceof Error
+              ? error.message
+              : "Sorry, something went wrong. Please try again.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -196,6 +235,17 @@ function ChatPage() {
               </div>
             </div>
           ))}
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="rounded-2xl bg-muted px-4 py-2.5 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 animate-pulse" />
+                  <span>Thinking...</span>
+                </div>
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
 
@@ -284,16 +334,18 @@ function ChatPage() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={recording ? "Recording…" : "Ask PayGPT to do something…"}
+            placeholder={recording ? "Recording…" : "Ask Kudispan AI to do something…"}
             disabled={recording}
             className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:opacity-60"
           />
           <button
             type="submit"
             className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
-            disabled={recording || (!input.trim() && pending.length === 0)}
+            disabled={recording || loading || !input.trim()}
           >
-            <Send className="h-4 w-4" /> Send
+            <Send className="h-4 w-4" />
+
+            {loading ? "Thinking..." : "Send"}
           </button>
         </form>
       </div>

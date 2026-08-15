@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.png";
+
 
 export function SiteFooter() {
   return (
@@ -6,8 +8,10 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground font-display text-lg">P</span>
-            <span className="font-display text-xl">PayGPT</span>
+            <span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground">
+              <img src={logo} alt="Logo" className="h-5 w-5 object-contain brightness-0 invert" />
+            </span>
+            <span className="font-display text-xl">Kudispan AI</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             AI-powered business banking. Move money, send invoices, and understand your numbers — by chat.
@@ -19,7 +23,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} PayGPT. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Kudispan AI. All rights reserved.</span>
           <span>Built for SMEs and individuals.</span>
         </div>
       </div>
