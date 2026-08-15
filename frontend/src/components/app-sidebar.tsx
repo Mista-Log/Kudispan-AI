@@ -57,7 +57,7 @@ export function AppSidebar() {
           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground font-display text-lg">
             P
           </span>
-          {!collapsed && <span className="font-display text-xl tracking-tight">PayGPT</span>}
+          {!collapsed && <span className="font-display text-xl tracking-tight">Kudispan AI</span>}
         </Link>
       </SidebarHeader>
 
