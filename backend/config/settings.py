@@ -197,11 +197,18 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://kudispan-ai.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://kudispan-ai.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
@@ -215,3 +222,9 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL",
     "openai/gpt-5",
 )
+
+print("=== CORS DEBUG ===")
+print("CORS middleware:", "corsheaders.middleware.CorsMiddleware" in MIDDLEWARE)
+print("CORS allowed origins:", globals().get("CORS_ALLOWED_ORIGINS"))
+print("CORS allow all:", globals().get("CORS_ALLOW_ALL_ORIGINS"))
+print("==================")
