@@ -35,7 +35,7 @@ function SignupPage() {
     try {
       const data = await signup(formData);
 
-      console.log("Signup successful:", data);
+      ;
 
       navigate("/login", {
         state: {

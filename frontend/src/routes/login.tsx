@@ -42,7 +42,7 @@ function LoginPage() {
     try {
       const data = await login(formData);
 
-      console.log(data);
+      
 
       // Save JWT
       localStorage.setItem("access", data.access);

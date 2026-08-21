@@ -223,8 +223,3 @@ OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL",
     "openai/gpt-5",
 )
 
-print("=== CORS DEBUG ===")
-print("CORS middleware:", "corsheaders.middleware.CorsMiddleware" in MIDDLEWARE)
-print("CORS allowed origins:", globals().get("CORS_ALLOWED_ORIGINS"))
-print("CORS allow all:", globals().get("CORS_ALLOW_ALL_ORIGINS"))
-print("==================")
