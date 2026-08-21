@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-41hdp0tv$p_l7nd-zyqviiu6!u@4=r%xtslufx2yu_ms-o+5q_
 DEBUG=False
 
 ALLOWED_HOSTS = [
-    ".onrender.com",
+    "kudispan-ai.onrender.com",
     ".vercel.app",
     "localhost",
     "127.0.0.1",
