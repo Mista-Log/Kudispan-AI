@@ -60,7 +60,6 @@ function SignupPage() {
 
   useEffect(() => { document.title = 'Create account — PayGPT'; }, []);
   return (
-    <PageShell>
       <div className="mx-auto flex max-w-md flex-col px-6 py-16">
         <h1 className="text-4xl">Create your account.</h1>
         <p className="mt-2 text-sm text-muted-foreground">30 days free. No card required.</p>
@@ -121,7 +120,6 @@ function SignupPage() {
           Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
         </p>
       </div>
-    </PageShell>
   );
 }
 

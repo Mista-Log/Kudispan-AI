@@ -64,7 +64,6 @@ function LoginPage() {
 
   useEffect(() => { document.title = 'Sign in — PayGPT'; }, []);
   return (
-    <PageShell>
       <div className="mx-auto flex max-w-md flex-col px-6 py-16">
         <h1 className="text-4xl">Welcome back.</h1>
         <p className="mt-2 text-sm text-muted-foreground">Sign in to your PayGPT account.</p>
@@ -114,7 +113,6 @@ function LoginPage() {
           No account? <Link to="/signup" className="text-primary hover:underline">Create one</Link>
         </p>
       </div>
-    </PageShell>
   );
 }
 
