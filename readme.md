@@ -1,6 +1,6 @@
-# 💳 PayGPT
+# 💳 Kudispan AI
 
-PayGPT is an AI-powered business banking assistant that helps businesses manage invoices, payments, and financial records through simple conversations. Instead of navigating multiple dashboards, users can perform tasks like creating invoices, checking revenue, viewing unpaid invoices, and tracking payments by chatting naturally with the assistant.
+Kudispan AI is an AI-powered business banking assistant that helps businesses manage invoices, payments, and financial records through simple conversations. Instead of navigating multiple dashboards, users can perform tasks like creating invoices, checking revenue, viewing unpaid invoices, and tracking payments by chatting naturally with the assistant.
 
 ## Features
 
@@ -40,7 +40,7 @@ PayGPT is an AI-powered business banking assistant that helps businesses manage 
 
 1. User signs in.
 2. The user interacts with the AI assistant using natural language.
-3. PayGPT creates invoices, generates ALATPay payment links, and tracks payment status.
+3. Kudispan AI creates invoices, generates ALATPay payment links, and tracks payment status.
 4. Users can also ask financial questions, such as monthly revenue or outstanding invoices, and receive instant responses.
 
 ## Example Commands
@@ -52,4 +52,4 @@ PayGPT is an AI-powered business banking assistant that helps businesses manage 
 
 ## Goal
 
-PayGPT simplifies business banking by combining AI, invoicing, payment collection, and financial insights into a single conversational experience.
+Kudispan AI simplifies business banking by combining AI, invoicing, payment collection, and financial insights into a single conversational experience.
