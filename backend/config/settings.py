@@ -58,7 +58,7 @@ INSTALLED_APPS = [
 
 
     "apps.accounts",
-    "apps.ai",
+    "apps.translation",
     "apps.invoice",
     "apps.payments",
 ]
@@ -223,3 +223,10 @@ OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL",
     "openai/gpt-5",
 )
 
+
+
+
+NKENNE_AI_API_KEY = os.getenv("NKENNE_AI_API_KEY")
+NKENNE_AI_API_URL = (
+    "https://developers-api.nkenne.ai/api/translate/nk_7477cfa78d2ce91872678d1ff6fd6739"
+)
