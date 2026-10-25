@@ -28,7 +28,6 @@ function LandingPage() {
   return (
     <PageShell>
       <Hero />
-      <LogoStrip />
       <Features />
       <ChatPreview />
       <HowItWorks />
@@ -163,19 +162,7 @@ function Hero() {
 }
 
 
-function LogoStrip() {
-  const items = ["Northwind Co.", "Atlas Studio", "Mercer & Bell", "Field Goods", "Verge Labs", "Lumen Press"];
-  return (
-    <section className="border-y border-border/60 bg-card/50">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-12 gap-y-3 px-6 py-6 text-sm text-muted-foreground">
-        <span className="text-xs uppercase tracking-widest">Trusted by teams at</span>
-        {items.map((i) => (
-          <span key={i} className="font-display text-lg text-foreground/70">{i}</span>
-        ))}
-      </div>
-    </section>
-  );
-}
+
 
 function Features() {
   const items = [
