@@ -9,6 +9,11 @@ import {
   LineChart,
   ShieldCheck,
   Sparkles,
+  Wallet,
+  TrendingUp,
+  CreditCard,
+  Coins,
+  ChartNoAxesCombined,
 } from "lucide-react";
 
 
@@ -26,37 +31,136 @@ function LandingPage() {
   );
 }
 
+
 function Hero() {
+  const floatingIcons = [
+    {
+      Icon: Wallet,
+      position: "left-[8%] top-[18%]",
+      delay: "0s",
+      duration: "5s",
+      rotate: "-12deg",
+    },
+    {
+      Icon: TrendingUp,
+      position: "right-[12%] top-[15%]",
+      delay: "1s",
+      duration: "6s",
+      rotate: "10deg",
+    },
+    {
+      Icon: Receipt,
+      position: "left-[16%] top-[60%]",
+      delay: "1.5s",
+      duration: "5.5s",
+      rotate: "8deg",
+    },
+    {
+      Icon: CreditCard,
+      position: "right-[15%] top-[58%]",
+      delay: "0.5s",
+      duration: "6.5s",
+      rotate: "-8deg",
+    },
+    {
+      Icon: Coins,
+      position: "left-[30%] top-[12%]",
+      delay: "2s",
+      duration: "7s",
+      rotate: "-5deg",
+    },
+    {
+      Icon: ChartNoAxesCombined,
+      position: "right-[30%] top-[68%]",
+      delay: "1.2s",
+      duration: "5.8s",
+      rotate: "6deg",
+    },
+  ];
+
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative isolate overflow-hidden">
+      {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,oklch(0.93_0.05_165)_0%,transparent_70%)]" />
-      <div className="mx-auto max-w-5xl px-6 pb-20 pt-24 text-center md:pt-32">
-        <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
-          Business banking,<br />
-          <span className="italic text-primary">by conversation.</span>
+
+      {/* Floating finance icons */}
+      <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
+        {floatingIcons.map(
+          ({ Icon, position, delay, duration, rotate }, index) => (
+            <div
+              key={index}
+              className={`absolute ${position} hidden rounded-2xl border border-primary/15 bg-card/70 p-4 text-primary shadow-lg shadow-primary/5 backdrop-blur-md sm:block`}
+              style={{
+                animation: `finance-float ${duration} ease-in-out ${delay} infinite`,
+                transform: `rotate(${rotate})`,
+              }}
+            >
+              <Icon className="h-6 w-6 md:h-7 md:w-7" />
+            </div>
+          )
+        )}
+      </div>
+
+      {/* Hero content */}
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-24 text-center md:pb-28 md:pt-32">
+
+        <h1 className="mt-7 font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
+          Business banking,
+          <br />
+          <span className="italic text-primary">
+            by conversation.
+          </span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-balance text-base text-muted-foreground md:text-lg">
-          Kudispan AI is your AI finance operator. Send invoices, schedule payments, reconcile accounts, and
-          answer "where did the money go?" — just by chatting.
+
+        <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground md:text-lg">
+          Kudispan AI is your AI finance operator. Send invoices,
+          schedule payments, reconcile accounts, and answer
+          "where did the money go?" — just by chatting.
         </p>
+
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/signup"
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:opacity-90"
           >
-            Start free <ArrowRight className="h-4 w-4" />
+            Start free
+            <ArrowRight className="h-4 w-4" />
           </Link>
+
           <Link
             to="/chat"
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card/80 px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-sm transition-colors hover:bg-muted"
           >
             Try the assistant
           </Link>
         </div>
+
+        <p className="mt-6 text-xs text-muted-foreground">
+          Smarter financial management in supported African languages.
+        </p>
       </div>
+
+      {/* Local animation */}
+      <style>{`
+        @keyframes finance-float {
+          0%, 100% {
+            translate: 0 0;
+          }
+          50% {
+            translate: 0 -16px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .finance-floating-icon {
+            animation: none !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
+
 
 function LogoStrip() {
   const items = ["Northwind Co.", "Atlas Studio", "Mercer & Bell", "Field Goods", "Verge Labs", "Lumen Press"];
