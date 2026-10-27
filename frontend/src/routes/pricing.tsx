@@ -30,7 +30,7 @@ const plans = [
 ];
 
 function PricingPage() {
-  useEffect(() => { document.title = 'Pricing — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Pricing — Kudispan AI'; }, []);
   return (
     <PageShell>
       <div className="mx-auto max-w-6xl px-6 py-20 text-center">

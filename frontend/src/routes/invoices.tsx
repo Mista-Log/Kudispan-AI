@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { PageShell } from "@/components/page-shell";
+import { PageShellDashboard } from "@/components/page-shell-dashboard";
 import { Plus, Search, X, Trash2 } from "lucide-react";
 import { getInvoices } from "@/api/invoices";
 import { createInvoice } from "@/api/invoices";
@@ -17,9 +17,13 @@ const initialRows: Row[] = [
 
 const statusTone: Record<string, string> = {
   Paid: "bg-primary/10 text-primary",
+  paid: "bg-primary/10 text-primary",
   Sent: "bg-accent text-accent-foreground",
+  sent: "bg-accent text-accent-foreground",
   Overdue: "bg-destructive/10 text-destructive",
+  overdue: "bg-destructive/10 text-destructive",
   Draft: "bg-muted text-muted-foreground",
+  draft: "bg-muted text-muted-foreground",
 };
 
 type LineItem = { description: string; quantity: number; price: number };
@@ -33,7 +37,7 @@ function InvoicesPage() {
 
 
   useEffect(() => {
-    document.title = "Invoices — PayGPT";
+    document.title = "Invoices — Kudispan AI";
 
     const fetchInvoices = async () => {
       try {
@@ -69,16 +73,16 @@ function InvoicesPage() {
 
   if (loading) {
     return (
-      <PageShell>
+      <PageShellDashboard>
         <div className="p-10 text-center">
           Loading invoices...
         </div>
-      </PageShell>
+      </PageShellDashboard>
     );
   }
 
   return (
-    <PageShell>
+    <PageShellDashboard>
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -132,9 +136,9 @@ function InvoicesPage() {
                 <tr key={r.id} className="hover:bg-muted/50">
                   <td className="px-4 py-3 font-medium">{r.id}</td>
                   <td className="px-4 py-3">{r.client}</td>
-                  <td className="px-4 py-3 tabular-nums">#{r.amount.toLocaleString()}</td>
+                  <td className="px-4 py-3 tabular-nums">₦{r.amount.toLocaleString()}</td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs #{statusTone[r.status]}`}>{r.status}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${statusTone[r.status] || "bg-muted text-muted-foreground"}`}>{r.status}</span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{r.due}</td>
                 </tr>
@@ -152,10 +156,10 @@ function InvoicesPage() {
             setRows((prev) => [row, ...prev]);
             setOpen(false);
           }}
-          nextId={`INV-#{String(242 + (rows.length - initialRows.length)).padStart(4, "0")}`}
+          nextId={`INV-${String(242 + (rows.length - initialRows.length)).padStart(4, "0")}`}
         />
       )}
-    </PageShell>
+    </PageShellDashboard>
   );
 }
 
@@ -198,7 +202,6 @@ function NewInvoiceDialog({
         amount: total,
         description: notes,
         due_date: dueDate,
-        payment_reference: "",
       });
 
       onCreate({

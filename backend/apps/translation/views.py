@@ -10,9 +10,10 @@ from .services import translate_text, NkenneAIError
 SUPPORTED_LANGUAGES = [
     "English",
     "Yoruba",
+    "Swahili",
+    "Nigerian Pidgin",
     "Hausa",
     "Igbo",
-    "Nigerian Pidgin",
 ]
 
 
@@ -122,12 +123,10 @@ class TranslateAPIView(APIView):
                 status=status.HTTP_200_OK,
             )
 
-        except NkenneAIError:
+        except NkenneAIError as exc:
             return Response(
                 {
-                    "error": (
-                        "Translation failed. Please try again later."
-                    )
+                    "error": str(exc) or "Translation failed. Please try again later."
                 },
                 status=status.HTTP_502_BAD_GATEWAY,
             )

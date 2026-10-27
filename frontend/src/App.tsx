@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import LandingPage from "./routes/index";
 import ChatPage from "./routes/chat";
+import DashboardPage from "./routes/dashboard";
 import DocsPage from "./routes/docs";
 import InsightsPage from "./routes/insights";
 import InvoicesPage from "./routes/invoices";
@@ -9,6 +10,7 @@ import PaymentSuccessPage from "./routes/payment-success";
 import PaymentsPage from "./routes/payments";
 import PricingPage from "./routes/pricing";
 import SignupPage from "./routes/signup";
+import TranslatePage from "./routes/translate";
 import ProtectedRoute from "@/components/protected-route";
 
 
@@ -40,16 +42,18 @@ export default function App() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/translate" element={<TranslatePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/docs" element={<DocsPage />} />
+      <Route path="/payment/success" element={<PaymentSuccessPage />} />
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
-        <Route path="/payment/success" element={<PaymentSuccessPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/invoices" element={<InvoicesPage />} />
       </Route>

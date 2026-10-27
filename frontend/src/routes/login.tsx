@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { PageShell } from "@/components/page-shell";
 import { login } from "@/api/auth";
 
 
@@ -62,11 +61,11 @@ function LoginPage() {
 
 
 
-  useEffect(() => { document.title = 'Sign in — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Sign in — Kudispan AI'; }, []);
   return (
       <div className="mx-auto flex max-w-md flex-col px-6 py-16">
         <h1 className="text-4xl">Welcome back.</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Sign in to your PayGPT account.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Sign in to your Kudispan AI account.</p>
 
         <form
           onSubmit={handleSubmit}

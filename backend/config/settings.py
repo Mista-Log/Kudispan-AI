@@ -201,6 +201,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://kudispan-ai.vercel.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -209,7 +213,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://kudispan-ai.vercel.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
 
 ALATPAY_BASE_URL = os.getenv("ALATPAY_BASE_URL")
 ALATPAY_BUSINESS_ID = os.getenv("ALATPAY_BUSINESS_ID")
@@ -227,6 +238,7 @@ OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL",
 
 
 NKENNE_AI_API_KEY = os.getenv("NKENNE_AI_API_KEY")
-NKENNE_AI_API_URL = (
-    "https://developers-api.nkenne.ai/api/translate/nk_7477cfa78d2ce91872678d1ff6fd6739"
+NKENNE_AI_API_URL = os.getenv(
+    "NKENNE_AI_API_URL",
+    "https://developers-api.nkenne.ai/api/translate/with-api-key",
 )
