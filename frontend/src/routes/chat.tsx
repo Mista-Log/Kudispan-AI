@@ -1,4 +1,4 @@
-import { PageShell } from "@/components/page-shell";
+import { PageShellDashboard } from "@/components/page-shell-dashboard";
 import { useState, useRef, useEffect } from "react";
 import { sendChatMessage } from "@/api/chat";
 import {
@@ -209,7 +209,7 @@ function ChatPage() {
   };
 
   return (
-    <PageShell>
+    <PageShellDashboard>
       <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col px-4 py-6">
         <div className="mb-4">
           <h1 className="text-3xl">Assistant</h1>
@@ -349,7 +349,7 @@ function ChatPage() {
           </button>
         </form>
       </div>
-    </PageShell>
+    </PageShellDashboard>
   );
 }
 

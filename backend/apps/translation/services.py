@@ -44,16 +44,22 @@ def translate_text(
         result = response.json()
 
     except requests.exceptions.RequestException as exc:
-        raise NkenneAIError(
-            "The Nkenne AI request failed."
-        ) from exc
+        error_detail = "The Nkenne AI request failed."
+        if exc.response is not None:
+            try:
+                error_json = exc.response.json()
+                if "message" in error_json:
+                    error_detail = error_json["message"]
+            except Exception:
+                error_detail = f"{error_detail} (HTTP {exc.response.status_code})"
+        raise NkenneAIError(error_detail) from exc
 
     except ValueError as exc:
         raise NkenneAIError(
             "Nkenne AI returned an invalid JSON response."
         ) from exc
 
-    translated_text = result.get("translatedText")
+    translated_text = result.get("translated_text") or result.get("translatedText")
 
     if not isinstance(translated_text, str) or not translated_text.strip():
         raise NkenneAIError(

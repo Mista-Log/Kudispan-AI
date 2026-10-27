@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { PageShell } from "@/components/page-shell";
 import { signup } from "@/api/auth";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -58,7 +57,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => { document.title = 'Create account — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Create account — Kudispan AI'; }, []);
   return (
       <div className="mx-auto flex max-w-md flex-col px-6 py-16">
         <h1 className="text-4xl">Create your account.</h1>
@@ -113,7 +112,7 @@ function SignupPage() {
             {loading ? "Creating account..." : "Create account"}
           </button>
           <p className="text-xs text-muted-foreground">
-            By continuing you agree to PayGPT's Terms and acknowledge our Privacy Policy.
+            By continuing you agree to Kudispan AI's Terms and acknowledge our Privacy Policy.
           </p>
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">

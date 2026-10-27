@@ -12,7 +12,7 @@ const details = {
 };
 function PaymentSuccessPage() {
   useEffect(() => {
-    document.title = "Payment Successful — PayGPT";
+    document.title = "Payment Successful — Kudispan AI";
   }, []);
   const [copied, setCopied] = useState(false);
   const copyReference = async () => {
@@ -25,7 +25,7 @@ function PaymentSuccessPage() {
     }
   };
   const downloadInvoice = () => {
-    const body = `PayGPT — Payment Receipt
+    const body = `Kudispan AI — Payment Receipt
 Invoice:    ${details.invoice}
 Customer:   ${details.customer}
 Amount:     ${details.amount}

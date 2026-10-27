@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { PageShell } from "@/components/page-shell";
+import { PageShellDashboard } from "@/components/page-shell-dashboard";
 import { ArrowDownLeft, ArrowUpRight, Plus } from "lucide-react";
 
 
@@ -12,9 +12,9 @@ const tx = [
 ];
 
 function PaymentsPage() {
-  useEffect(() => { document.title = 'Payments — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Payments — Kudispan AI'; }, []);
   return (
-    <PageShell>
+    <PageShellDashboard>
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -39,7 +39,7 @@ function PaymentsPage() {
               {tx.map((t) => (
                 <li key={t.id} className="flex items-center justify-between px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <span className={`grid h-9 w-9 place-items-center rounded-full #{t.kind === "in" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                    <span className={`grid h-9 w-9 place-items-center rounded-full ${t.kind === "in" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
                       {t.kind === "in" ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                     </span>
                     <div>
@@ -47,8 +47,8 @@ function PaymentsPage() {
                       <div className="text-xs text-muted-foreground">{t.date}</div>
                     </div>
                   </div>
-                  <div className={`tabular-nums text-sm font-medium #{t.amount > 0 ? "text-primary" : "text-foreground"}`}>
-                    {t.amount > 0 ? "+" : ""}#{Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  <div className={`tabular-nums text-sm font-medium ${t.amount > 0 ? "text-primary" : "text-foreground"}`}>
+                    {t.amount > 0 ? "+" : ""}₦{Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </div>
                 </li>
               ))}
@@ -56,7 +56,7 @@ function PaymentsPage() {
           </div>
         </div>
       </div>
-    </PageShell>
+    </PageShellDashboard>
   );
 }
 

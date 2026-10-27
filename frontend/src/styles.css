@@ -36,7 +36,7 @@
 
 :root {
   --radius: 0.5rem;
-  /* PayGPT palette — warm paper, deep ink, single emerald accent */
+  /* Kudispan AI palette — warm paper, deep ink, single emerald accent */
   --background: oklch(0.985 0.005 95);
   --foreground: oklch(0.18 0.01 250);
   --card: oklch(1 0 0);

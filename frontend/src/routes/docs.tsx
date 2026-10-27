@@ -10,11 +10,11 @@ const sections = [
     body: (
       <>
         <p>
-          PayGPT is an AI-powered banking assistant that helps small businesses and individuals manage
+          Kudispan AI is an AI-powered banking assistant that helps small businesses and individuals manage
           payments, invoices, and financial insights through natural-language conversations.
         </p>
         <p>
-          This documentation covers everything you need to use PayGPT — from your first message to
+          This documentation covers everything you need to use Kudispan AI — from your first message to
           building automated workflows.
         </p>
       </>
@@ -26,9 +26,9 @@ const sections = [
     body: (
       <ol className="list-decimal space-y-2 pl-5">
         <li>Create an account at <code>/signup</code>.</li>
-        <li>Verify your email and complete the business profile.</li>
-        <li>Connect at least one bank account or card.</li>
-        <li>Open the Assistant and try: <em>"Show my balance"</em>.</li>
+        <li>Complete your business profile.</li>
+        <li>Generate invoices with instant ALATPay payment links.</li>
+        <li>Open the Assistant and try: <em>"Show my balance"</em> or use the Translator for African languages.</li>
       </ol>
     ),
   },
@@ -37,14 +37,14 @@ const sections = [
     title: "Using the assistant",
     body: (
       <>
-        <p>The assistant understands plain English. Examples:</p>
+        <p>The assistant understands natural instructions. Examples:</p>
         <ul className="list-disc space-y-1 pl-5">
-          <li><em>"Send $500 to John for design work."</em></li>
-          <li><em>"Draft an invoice to Atlas Studio for 10 hours at $120/hr."</em></li>
-          <li><em>"How much did we spend on software last month?"</em></li>
+          <li><em>"Send invoice for ₦50,000 to Dangote Ventures for design work."</em></li>
+          <li><em>"Translate payment confirmation to Yoruba or Swahili."</em></li>
+          <li><em>"How much revenue did we generate this month?"</em></li>
         </ul>
         <p>
-          Every action that moves money requires explicit confirmation. PayGPT shows a preview before
+          Every action that moves money requires explicit confirmation. Kudispan AI shows a preview before
           executing.
         </p>
       </>
@@ -57,7 +57,7 @@ const sections = [
       <>
         <p>
           Create, send, and track invoices from the <code>/invoices</code> page or directly through chat.
-          Invoices support recurring schedules, multi-currency, and automatic reminders.
+          Invoices support ALATPay payment link generation, instant status updates, and automatic receipts.
         </p>
       </>
     ),
@@ -68,7 +68,7 @@ const sections = [
     body: (
       <>
         <p>
-          Move money between connected accounts, pay vendors, or schedule recurring payments. PayGPT
+          Collect payments seamlessly via ALATPay, track incoming transfers, or schedule recurring payments. Kudispan AI
           shows live balances and a full audit log of every transaction.
         </p>
       </>
@@ -79,16 +79,16 @@ const sections = [
     title: "API & integrations",
     body: (
       <>
-        <p>The PayGPT REST API lets you embed banking actions into your own product.</p>
+        <p>The Kudispan AI REST API lets you embed invoicing and African language translation into your own product.</p>
         <pre className="overflow-x-auto rounded-lg bg-foreground/95 p-4 text-xs text-background">
-{`POST /v1/payments
+{`POST /api/invoice/
 Authorization: Bearer <token>
 
 {
-  "to": "acct_123",
-  "amount": 5000,
-  "currency": "USD",
-  "memo": "June rent"
+  "customer_name": "Dangote Ventures",
+  "customer_email": "client@example.com",
+  "amount": 250000,
+  "description": "Website Development"
 }`}
         </pre>
       </>
@@ -99,8 +99,7 @@ Authorization: Bearer <token>
     title: "Security",
     body: (
       <p>
-        PayGPT uses end-to-end encryption, OAuth-based bank connections via regulated providers, and a
-        confirm-before-send model on every monetary action. We are SOC 2 Type II in progress.
+        Kudispan AI uses end-to-end encryption, secure JWT authentication, and verified payment webhooks.
       </p>
     ),
   },
@@ -109,7 +108,7 @@ Authorization: Bearer <token>
     title: "Support",
     body: (
       <p>
-        Reach our team at <a className="text-primary underline" href="mailto:hello@paygpt.app">hello@paygpt.app</a>.
+        Reach our team at <a className="text-primary underline" href="mailto:support@kudispan.ai">support@kudispan.ai</a>.
         Business and Enterprise plans get priority response within 4 business hours.
       </p>
     ),
@@ -117,7 +116,7 @@ Authorization: Bearer <token>
 ];
 
 function DocsPage() {
-  useEffect(() => { document.title = 'Documentation — PayGPT'; }, []);
+  useEffect(() => { document.title = 'Documentation — Kudispan AI'; }, []);
   const [active, setActive] = useState(sections[0].id);
   const current = sections.find((s) => s.id === active) ?? sections[0];
 
